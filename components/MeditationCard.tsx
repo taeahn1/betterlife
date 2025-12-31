@@ -1,21 +1,55 @@
 'use client';
 
 import { EventLog } from '@/types';
-import { Brain, Calendar } from 'lucide-react';
+import { Brain, Calendar, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale/ko';
 import { toZonedTime } from 'date-fns-tz';
+import { useState } from 'react';
 
 interface MeditationCardProps {
     events: EventLog[];
 }
 
 export default function MeditationCard({ events }: MeditationCardProps) {
+    const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+
     const meditationEvents = events.filter(
         e => e.activity_type === 'MEDITATION_START' || e.activity_type === 'MEDITATION_END'
-    );
+    ).filter(e => !deletingIds.has(e.id));
 
     const totalSessions = meditationEvents.filter(e => e.activity_type === 'MEDITATION_START').length;
+
+    const handleDelete = async (eventId: string) => {
+        if (!confirm('이 명상 기록을 삭제하시겠습니까?')) {
+            return;
+        }
+
+        // Optimistic UI update
+        setDeletingIds(prev => new Set(prev).add(eventId));
+
+        try {
+            const response = await fetch(`/api/events/${eventId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete event');
+            }
+
+            // Refresh the page to show updated data
+            window.location.reload();
+        } catch (error) {
+            console.error('Error deleting event:', error);
+            alert('삭제 중 오류가 발생했습니다.');
+            // Revert optimistic update
+            setDeletingIds(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(eventId);
+                return newSet;
+            });
+        }
+    };
 
     return (
         <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-6 card-hover">
@@ -70,6 +104,13 @@ export default function MeditationCard({ events }: MeditationCardProps) {
                                         종료
                                     </span>
                                 )}
+                                <button
+                                    onClick={() => handleDelete(event.id)}
+                                    className="p-2 hover:bg-red-500/10 rounded-lg transition-colors group"
+                                    title="삭제"
+                                >
+                                    <Trash2 className="w-4 h-4 text-gray-400 group-hover:text-red-400 transition-colors" />
+                                </button>
                             </div>
                         </div>
                     ))}

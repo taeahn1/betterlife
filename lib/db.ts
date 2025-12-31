@@ -76,6 +76,21 @@ export async function queryEvents(params: EventQueryParams): Promise<EventLog[]>
 }
 
 /**
+ * Delete an event by ID
+ */
+export async function deleteEvent(eventId: string): Promise<void> {
+    const { error } = await supabase
+        .from('events')
+        .delete()
+        .eq('id', eventId);
+
+    if (error) {
+        console.error('Error deleting event:', error);
+        throw new Error('Failed to delete event from database');
+    }
+}
+
+/**
  * Generate a unique ID for events
  */
 function generateId(): string {
