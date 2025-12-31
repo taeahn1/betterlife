@@ -26,45 +26,66 @@ export async function analyzeFoodImage(
 
         const prompt = `Analyze this food image and provide detailed nutritional information in JSON format.
 
+**IMPORTANT**: If there are multiple food items in the image, analyze EACH item separately.
+
 Please provide the following information:
 
-1. **Basic Nutrition (The Big 4)**:
-   - calories: Total estimated energy (kcal)
-   - carbohydrates: Amount in grams
-   - protein: Amount in grams
-   - fat: Amount in grams
-
-2. **Food Identity**:
-   - menu_name: Specific dish name in Korean (e.g., "연어 아보카도 덮밥")
+1. **Overall Meal Summary**:
+   - menu_name: Overall meal name in Korean (e.g., "연어 덮밥과 된장국 세트")
    - food_category: Category like "한식", "양식", "일식", "중식", "간식", "음료"
-   - ingredients: Array of main ingredients visible in the image (in Korean)
+   - ingredients: Array of ALL ingredients visible (in Korean)
+   - portion_size: Total serving size like "1인분", "2인분"
 
-3. **Portion & Ratio**:
-   - portion_size: Estimated serving size like "1인분", "0.5인분", "1.5인분"
-   - pfc_ratio: Object with protein, fat, and carbs percentages of total calories
-     - protein: percentage (0-100)
-     - fat: percentage (0-100)
-     - carbs: percentage (0-100)
-     - Note: protein + fat + carbs should equal 100
+2. **Total Nutrition (sum of all items)**:
+   - calories: Total calories (kcal)
+   - carbohydrates: Total carbs (g)
+   - protein: Total protein (g)
+   - fat: Total fat (g)
+   - pfc_ratio: Percentage breakdown (protein%, fat%, carbs%) - must sum to 100
+
+3. **Individual Food Items** (CRITICAL - analyze each item separately):
+   - food_items: Array of objects, one for EACH distinct food item
+   - For each item include:
+     - name: Specific food name in Korean
+     - calories, carbohydrates, protein, fat (individual values)
+     - portion_size: Size of this specific item
 
 Return ONLY valid JSON in this exact format:
 {
-  "calories": number,
-  "carbohydrates": number,
-  "protein": number,
-  "fat": number,
   "menu_name": "string",
   "food_category": "string",
   "ingredients": ["string"],
   "portion_size": "string",
+  "calories": number,
+  "carbohydrates": number,
+  "protein": number,
+  "fat": number,
   "pfc_ratio": {
     "protein": number,
     "fat": number,
     "carbs": number
-  }
+  },
+  "food_items": [
+    {
+      "name": "string",
+      "calories": number,
+      "carbohydrates": number,
+      "protein": number,
+      "fat": number,
+      "portion_size": "string"
+    }
+  ]
 }
 
-Be as accurate as possible based on visual analysis. If uncertain, provide reasonable estimates.`;
+**Example**: If you see rice, grilled fish, and soup:
+- menu_name: "구운 생선 정식"
+- food_items: [
+    {"name": "흰쌀밥", "calories": 300, ...},
+    {"name": "구운 고등어", "calories": 250, ...},
+    {"name": "된장국", "calories": 50, ...}
+  ]
+
+Be as accurate as possible. If there's only one item, food_items array will have one object.`;
 
         const imagePart = {
             inlineData: {

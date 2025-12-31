@@ -56,18 +56,30 @@ export interface EventQueryParams {
 }
 
 /**
+ * Individual food item in a meal
+ */
+export interface FoodItem {
+    name: string;               // e.g., "연어 사시미"
+    calories: number;           // kcal
+    carbohydrates: number;      // g
+    protein: number;            // g
+    fat: number;                // g
+    portion_size: string;       // e.g., "100g", "1접시"
+}
+
+/**
  * Meal metadata structure for food photo analysis
  * Stored in EventLog.metadata when activity_type is MEAL
  */
 export interface MealMetadata {
-    // Basic Nutrition (The Big 4)
+    // Basic Nutrition (The Big 4) - Total for entire meal
     calories: number;           // kcal
     carbohydrates: number;      // g
     protein: number;            // g
     fat: number;                // g
 
     // Food Identity
-    menu_name: string;          // e.g., "연어 아보카도 덮밥"
+    menu_name: string;          // e.g., "연어 아보카도 덮밥 세트" (overall meal name)
     food_category: string;      // e.g., "한식", "양식", "간식"
     ingredients: string[];      // e.g., ["연어", "아보카도", "현미밥"]
 
@@ -78,6 +90,9 @@ export interface MealMetadata {
         fat: number;            // % of total calories
         carbs: number;          // % of total calories
     };
+
+    // Detailed breakdown by individual food items
+    food_items?: FoodItem[];    // Array of individual foods in the photo
 
     // Image
     image_url?: string;         // Optional: stored image URL
