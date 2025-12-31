@@ -2,15 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { addEvent } from '@/lib/db';
 import { analyzeFoodImage } from '@/lib/gemini';
 import { ApiResponse, EventLog, ActivityType, MealMetadata } from '@/types';
-import formidable from 'formidable';
-import fs from 'fs/promises';
 
-// Disable body parsing for this route to handle multipart/form-data
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
+// Increase body size limit for image uploads
+export const maxDuration = 60; // 60 seconds timeout for Gemini API
 
 /**
  * POST /api/meals/analyze
