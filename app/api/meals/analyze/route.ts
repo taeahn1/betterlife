@@ -73,12 +73,18 @@ export async function POST(request: NextRequest) {
         const mealData: MealMetadata = await analyzeFoodImage(buffer, mime_type);
         console.log('Analysis complete:', mealData);
 
+        // Add image data to metadata for display
+        const metadataWithImage = {
+            ...mealData,
+            image_url: `data:${mime_type};base64,${image_base64}`,
+        };
+
         // Store event in database
         const event = await addEvent({
             user_id,
             activity_type: ActivityType.MEAL,
             timestamp,
-            metadata: mealData,
+            metadata: metadataWithImage,
         });
 
         // Return success response with analysis
