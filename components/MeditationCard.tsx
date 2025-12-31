@@ -4,6 +4,7 @@ import { EventLog } from '@/types';
 import { Brain, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale/ko';
+import { toZonedTime } from 'date-fns-tz';
 
 interface MeditationCardProps {
     events: EventLog[];
@@ -54,7 +55,7 @@ export default function MeditationCard({ events }: MeditationCardProps) {
                                         {event.activity_type === 'MEDITATION_START' ? '명상 시작' : '명상 종료'}
                                     </p>
                                     <p className="text-sm text-[var(--text-secondary)]">
-                                        {format(new Date(event.timestamp), 'PPP p', { locale: ko })}
+                                        {format(toZonedTime(new Date(event.timestamp), 'Asia/Seoul'), 'PPP p', { locale: ko })}
                                     </p>
                                 </div>
                             </div>
