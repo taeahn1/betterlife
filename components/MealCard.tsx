@@ -149,96 +149,96 @@ export default function MealCard({ events }: MealCardProps) {
                                                 <td className="py-3 px-2 text-right text-green-400">
                                                     {metadata?.protein?.toFixed(1) || 0}g
                                                 </td>
-                                                <td className="py-" px-2 text-right text-yellow-400">
-                                                {metadata?.fat?.toFixed(1) || 0}g
-                                            </td>
-                                            <td className="py-3 px-2 text-center text-xs text-[var(--text-secondary)]">
-                                                {metadata?.pfc_ratio ?
-                                                    `${metadata.pfc_ratio.protein}:${metadata.pfc_ratio.fat}:${metadata.pfc_ratio.carbs}`
-                                                    : '-'}
-                                            </td>
-                                            <td className="py-3 px-2 text-center">
-                                                {metadata?.image_url && (
-                                                    <button
-                                                        onClick={() => setSelectedImage(metadata.image_url!)}
-                                                        className="relative w-12 h-12 rounded-lg overflow-hidden hover:ring-2 hover:ring-orange-500 transition-all"
-                                                    >
-                                                        <img
-                                                            src={metadata.image_url}
-                                                            alt={metadata.menu_name}
-                                                            className="w-full h-full object-cover"
-                                                        />
-                                                    </button>
-                                                )}
-                                            </td>
-                                            <td className="py-3 px-2 text-center">
-                                                <button
-                                                    onClick={() => handleDelete(event.id)}
-                                                    className="p-2 hover:bg-red-500/10 rounded-lg transition-colors group"
-                                                    title="삭제"
-                                                >
-                                                    <Trash2 className="w-4 h-4 text-gray-400 group-hover:text-red-400 transition-colors" />
-                                                </button>
-                                            </td>
-                                        </tr >
-
-                                            {/* Expanded row showing food items */ }
-                                    {
-                                        isExpanded && hasDetails && (
-                                            <tr className="bg-[var(--background)]">
-                                                <td colSpan={10} className="py-4 px-6">
-                                                    <div className="space-y-2">
-                                                        <h4 className="text-sm font-semibold text-[var(--text-secondary)] mb-3">개별 음식 상세</h4>
-                                                        {metadata.food_items!.map((item, idx) => (
-                                                            <div key={idx} className="flex items-center justify-between py-2 px-4 bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)]">
-                                                                <div className="flex items-center gap-4 flex-1">
-                                                                    <span className="font-medium min-w-[120px]">{item.name}</span>
-                                                                    <span className="text-xs text-[var(--text-secondary)]">{item.portion_size}</span>
-                                                                </div>
-                                                                <div className="flex items-center gap-6 text-xs">
-                                                                    <span>{item.calories} kcal</span>
-                                                                    <span className="text-blue-400">탄 {item.carbohydrates.toFixed(1)}g</span>
-                                                                    <span className="text-green-400">단 {item.protein.toFixed(1)}g</span>
-                                                                    <span className="text-yellow-400">지 {item.fat.toFixed(1)}g</span>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
+                                                <td className="py-3 px-2 text-right text-yellow-400">
+                                                    {metadata?.fat?.toFixed(1) || 0}g
                                                 </td>
-                                            </tr>
-                                        )
-                                    }
+                                                <td className="py-3 px-2 text-center text-xs text-[var(--text-secondary)]">
+                                                    {metadata?.pfc_ratio ?
+                                                        `${metadata.pfc_ratio.protein}:${metadata.pfc_ratio.fat}:${metadata.pfc_ratio.carbs}`
+                                                        : '-'}
+                                                </td>
+                                                <td className="py-3 px-2 text-center">
+                                                    {metadata?.image_url && (
+                                                        <button
+                                                            onClick={() => setSelectedImage(metadata.image_url!)}
+                                                            className="relative w-12 h-12 rounded-lg overflow-hidden hover:ring-2 hover:ring-orange-500 transition-all"
+                                                        >
+                                                            <img
+                                                                src={metadata.image_url}
+                                                                alt={metadata.menu_name}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        </button>
+                                                    )}
+                                                </td>
+                                                <td className="py-3 px-2 text-center">
+                                                    <button
+                                                        onClick={() => handleDelete(event.id)}
+                                                        className="p-2 hover:bg-red-500/10 rounded-lg transition-colors group"
+                                                        title="삭제"
+                                                    >
+                                                        <Trash2 className="w-4 h-4 text-gray-400 group-hover:text-red-400 transition-colors" />
+                                                    </button>
+                                                </td>
+                                            </tr >
+
+                                            {/* Expanded row showing food items */}
+                                            {
+                                                isExpanded && hasDetails && (
+                                                    <tr className="bg-[var(--background)]">
+                                                        <td colSpan={10} className="py-4 px-6">
+                                                            <div className="space-y-2">
+                                                                <h4 className="text-sm font-semibold text-[var(--text-secondary)] mb-3">개별 음식 상세</h4>
+                                                                {metadata.food_items!.map((item, idx) => (
+                                                                    <div key={idx} className="flex items-center justify-between py-2 px-4 bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)]">
+                                                                        <div className="flex items-center gap-4 flex-1">
+                                                                            <span className="font-medium min-w-[120px]">{item.name}</span>
+                                                                            <span className="text-xs text-[var(--text-secondary)]">{item.portion_size}</span>
+                                                                        </div>
+                                                                        <div className="flex items-center gap-6 text-xs">
+                                                                            <span>{item.calories} kcal</span>
+                                                                            <span className="text-blue-400">탄 {item.carbohydrates.toFixed(1)}g</span>
+                                                                            <span className="text-green-400">단 {item.protein.toFixed(1)}g</span>
+                                                                            <span className="text-yellow-400">지 {item.fat.toFixed(1)}g</span>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            }
                                         </>
-                            );
+                                    );
                                 })}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
                     </div>
                 )}
-        </div >
+            </div >
 
-            {/* Image Modal */ }
-    {
-        selectedImage && (
-            <div
-                className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-                onClick={() => setSelectedImage(null)}
-            >
-                <button
-                    onClick={() => setSelectedImage(null)}
-                    className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
-                >
-                    <X className="w-6 h-6 text-white" />
-                </button>
-                <img
-                    src={selectedImage}
-                    alt="Food"
-                    className="max-w-full max-h-[90vh] rounded-lg"
-                    onClick={(e) => e.stopPropagation()}
-                />
-            </div>
-        )
-    }
+            {/* Image Modal */}
+            {
+                selectedImage && (
+                    <div
+                        className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <button
+                            onClick={() => setSelectedImage(null)}
+                            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+                        >
+                            <X className="w-6 h-6 text-white" />
+                        </button>
+                        <img
+                            src={selectedImage}
+                            alt="Food"
+                            className="max-w-full max-h-[90vh] rounded-lg"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                    </div>
+                )
+            }
         </>
     );
 }
