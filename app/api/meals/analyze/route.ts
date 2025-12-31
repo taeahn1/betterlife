@@ -3,34 +3,43 @@ import { addEvent } from '@/lib/db';
 import { analyzeFoodImage } from '@/lib/gemini';
 import { ApiResponse, EventLog, ActivityType, MealMetadata } from '@/types';
 
-// Increase body size limit for image uploads
-export const maxDuration = 60; // 60 seconds timeout for Gemini API
+// Increase timeout for Gemini API
+export const maxDuration = 60;
 
 /**
  * POST /api/meals/analyze
  * 
  * Analyze food image and store meal data
  * 
- * Accepts multipart/form-data with:
- * - image: Image file
+ * Accepts JSON with:
+ * - image_base64: Base64 encoded image string
+ * - mime_type: Image MIME type (e.g., "image/jpeg")
  * - timestamp: ISO-8601 timestamp
  * - user_id: User identifier
  */
 export async function POST(request: NextRequest) {
     try {
-        // Parse form data
-        const formData = await request.formData();
+        // Parse JSON body
+        const body = await request.json();
 
-        const imageFile = formData.get('image') as File | null;
-        const timestamp = formData.get('timestamp') as string | null;
-        const user_id = formData.get('user_id') as string | null;
+        const { image_base64, mime_type, timestamp, user_id } = body;
 
         // Validate required fields
-        if (!imageFile) {
+        if (!image_base64) {
             return NextResponse.json<ApiResponse>(
                 {
                     success: false,
-                    error: 'Image file is required',
+                    error: 'image_base64 is required',
+                },
+                { status: 400 }
+            );
+        }
+
+        if (!mime_type) {
+            return NextResponse.json<ApiResponse>(
+                {
+                    success: false,
+                    error: 'mime_type is required',
                 },
                 { status: 400 }
             );
@@ -40,7 +49,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json<ApiResponse>(
                 {
                     success: false,
-                    error: 'Timestamp is required',
+                    error: 'timestamp is required',
                 },
                 { status: 400 }
             );
@@ -50,20 +59,18 @@ export async function POST(request: NextRequest) {
             return NextResponse.json<ApiResponse>(
                 {
                     success: false,
-                    error: 'User ID is required',
+                    error: 'user_id is required',
                 },
                 { status: 400 }
             );
         }
 
-        // Convert File to Buffer
-        const arrayBuffer = await imageFile.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        const mimeType = imageFile.type;
+        // Convert base64 to Buffer
+        const buffer = Buffer.from(image_base64, 'base64');
 
         // Analyze image with Gemini
         console.log('Analyzing food image with Gemini...');
-        const mealData: MealMetadata = await analyzeFoodImage(buffer, mimeType);
+        const mealData: MealMetadata = await analyzeFoodImage(buffer, mime_type);
         console.log('Analysis complete:', mealData);
 
         // Store event in database
