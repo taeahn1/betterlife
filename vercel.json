@@ -1,6 +1,6 @@
 {
     "functions": {
-        "api/meals/analyze.func": {
+        "app/api/meals/analyze/route.ts": {
             "maxDuration": 60
         }
     }
