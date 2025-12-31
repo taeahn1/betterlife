@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
     // Fetch all events (in a real app, you'd filter by logged-in user)
-    const events = queryEvents({});
+    const events = await queryEvents({});
 
     // Calculate stats
     const meditationCount = events.filter(
