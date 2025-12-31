@@ -54,3 +54,31 @@ export interface EventQueryParams {
     start_date?: string;
     end_date?: string;
 }
+
+/**
+ * Meal metadata structure for food photo analysis
+ * Stored in EventLog.metadata when activity_type is MEAL
+ */
+export interface MealMetadata {
+    // Basic Nutrition (The Big 4)
+    calories: number;           // kcal
+    carbohydrates: number;      // g
+    protein: number;            // g
+    fat: number;                // g
+
+    // Food Identity
+    menu_name: string;          // e.g., "연어 아보카도 덮밥"
+    food_category: string;      // e.g., "한식", "양식", "간식"
+    ingredients: string[];      // e.g., ["연어", "아보카도", "현미밥"]
+
+    // Portion & Ratio
+    portion_size: string;       // e.g., "1인분", "0.5인분"
+    pfc_ratio: {
+        protein: number;        // % of total calories
+        fat: number;            // % of total calories
+        carbs: number;          // % of total calories
+    };
+
+    // Image
+    image_url?: string;         // Optional: stored image URL
+}

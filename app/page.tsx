@@ -1,5 +1,6 @@
 import { queryEvents } from '@/lib/db';
 import MeditationCard from '@/components/MeditationCard';
+import MealCard from '@/components/MealCard';
 import StatsCard from '@/components/StatsCard';
 
 export const dynamic = 'force-dynamic';
@@ -82,6 +83,11 @@ export default async function HomePage() {
                 {/* Meditation Detail Card */}
                 <div className="mb-8">
                     <MeditationCard events={events} />
+                </div>
+
+                {/* Meal Detail Card */}
+                <div className="mb-8">
+                    <MealCard events={events} />
                 </div>
 
                 {/* Info Card */}
