@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Create event
-        const event = addEvent({
+        const event = await addEvent({
             user_id: body.user_id,
             activity_type: activityType,
             timestamp: body.timestamp,
