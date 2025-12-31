@@ -1,99 +1,78 @@
-import fs from 'fs';
-import path from 'path';
+import { createClient } from '@supabase/supabase-js';
 import { EventLog, ActivityType, EventQueryParams } from '@/types';
 
-const DB_PATH = path.join(process.cwd(), 'data', 'events.json');
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-/**
- * Ensure the data directory and file exist
- */
-function ensureDbFile(): void {
-    const dir = path.dirname(DB_PATH);
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
-    if (!fs.existsSync(DB_PATH)) {
-        fs.writeFileSync(DB_PATH, JSON.stringify([], null, 2), 'utf-8');
-    }
+if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables');
 }
 
-/**
- * Read all events from the database
- */
-export function readEvents(): EventLog[] {
-    ensureDbFile();
-    try {
-        const data = fs.readFileSync(DB_PATH, 'utf-8');
-        return JSON.parse(data) as EventLog[];
-    } catch (error) {
-        console.error('Error reading events:', error);
-        return [];
-    }
-}
-
-/**
- * Write events to the database
- * Thread-safe write operation
- */
-export function writeEvents(events: EventLog[]): void {
-    ensureDbFile();
-    try {
-        fs.writeFileSync(DB_PATH, JSON.stringify(events, null, 2), 'utf-8');
-    } catch (error) {
-        console.error('Error writing events:', error);
-        throw new Error('Failed to write events to database');
-    }
-}
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 /**
  * Add a new event to the database
  */
-export function addEvent(event: Omit<EventLog, 'id' | 'created_at'>): EventLog {
-    const events = readEvents();
-
+export async function addEvent(event: Omit<EventLog, 'id' | 'created_at'>): Promise<EventLog> {
     const newEvent: EventLog = {
         ...event,
         id: generateId(),
         created_at: new Date().toISOString(),
     };
 
-    events.push(newEvent);
-    writeEvents(events);
+    const { data, error } = await supabase
+        .from('events')
+        .insert([newEvent])
+        .select()
+        .single();
 
-    return newEvent;
+    if (error) {
+        console.error('Error adding event:', error);
+        throw new Error('Failed to add event to database');
+    }
+
+    return data as EventLog;
 }
 
 /**
  * Query events with filters
  */
-export function queryEvents(params: EventQueryParams): EventLog[] {
-    let events = readEvents();
+export async function queryEvents(params: EventQueryParams): Promise<EventLog[]> {
+    let query = supabase
+        .from('events')
+        .select('*');
 
     // Filter by user_id
     if (params.user_id) {
-        events = events.filter(e => e.user_id === params.user_id);
+        query = query.eq('user_id', params.user_id);
     }
 
     // Filter by activity_type
     if (params.activity_type) {
-        events = events.filter(e => e.activity_type === params.activity_type);
+        query = query.eq('activity_type', params.activity_type);
     }
 
     // Filter by date range
     if (params.start_date) {
-        const startDate = new Date(params.start_date);
-        events = events.filter(e => new Date(e.timestamp) >= startDate);
+        query = query.gte('timestamp', params.start_date);
     }
 
     if (params.end_date) {
-        const endDate = new Date(params.end_date);
-        events = events.filter(e => new Date(e.timestamp) <= endDate);
+        query = query.lte('timestamp', params.end_date);
     }
 
     // Sort by timestamp (newest first)
-    events.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    query = query.order('timestamp', { ascending: false });
 
-    return events;
+    const { data, error } = await query;
+
+    if (error) {
+        console.error('Error querying events:', error);
+        throw new Error('Failed to query events from database');
+    }
+
+    return (data as EventLog[]) || [];
 }
 
 /**
