@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
         const end_date = searchParams.get('end_date') || undefined;
 
         // Query events
-        const events = queryEvents({
+        const events = await queryEvents({
             user_id,
             activity_type,
             start_date,
