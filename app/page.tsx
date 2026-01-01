@@ -3,8 +3,7 @@ import MeditationCard from '@/components/MeditationCard';
 import MealCard from '@/components/MealCard';
 import StatsCard from '@/components/StatsCard';
 import TimeInBed from '@/components/TimeInBed';
-import SkinDashboard from '@/components/SkinDashboard';
-import SkinTrendChart from '@/components/SkinTrendChart';
+import SkinSummaryCard from '@/components/SkinSummaryCard';
 import { SkinAnalysisMetadata } from '@/types';
 import { toZonedTime } from 'date-fns-tz';
 import { isSameDay, subDays } from 'date-fns';
@@ -97,13 +96,10 @@ export default async function HomePage() {
                 {/* Time in Bed Card (New) */}
                 <TimeInBed todayEvents={todayEvents} yesterdayEvents={yesterdayEvents} />
 
-                {/* Skin Analysis Dashboard (New) */}
-                {skinAnalysisEvents.length > 0 && (
-                    <>
-                        <SkinDashboard latestAnalysis={skinAnalysisEvents[0].metadata as SkinAnalysisMetadata} />
-                        <SkinTrendChart skinEvents={skinAnalysisEvents} />
-                    </>
-                )}
+                {/* Skin Summary Card */}
+                <SkinSummaryCard
+                    latestAnalysis={skinAnalysisEvents.length > 0 ? skinAnalysisEvents[0].metadata as SkinAnalysisMetadata : null}
+                />
 
                 {/* Meal Detail Card */}
                 <div className="mb-8">
