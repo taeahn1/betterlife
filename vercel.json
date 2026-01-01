@@ -1,7 +1,8 @@
 {
     "functions": {
-        "app/api/meals/analyze/route.ts": {
-            "maxDuration": 60
+        "app/api/**/*": {
+            "maxDuration": 60,
+            "memory": 3008
         }
     }
 }
