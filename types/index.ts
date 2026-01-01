@@ -10,6 +10,58 @@ export enum ActivityType {
     EXERCISE = 'EXERCISE',
     SLEEP = 'SLEEP',
     MOOD = 'MOOD',
+    SKIN_CHECK = 'SKIN_CHECK',
+}
+
+/**
+ * Skin analysis detailed metadata
+ * Stored in EventLog.metadata when activity_type is SKIN_CHECK
+ */
+export interface SkinAnalysisMetadata {
+    // 1. Lesion Counts (Hard Count)
+    lesion_counts: {
+        non_inflammatory: number; // 좁쌀, 화이트헤드
+        inflammatory: number;     // 염증성 (구진, 농포)
+        cystic: number;           // 낭종, 결절
+        large_lesions: number;    // 직경 5mm 이상
+    };
+
+    // 2. Spatial Mapping
+    spatial_mapping: {
+        primary_locations: string[]; // e.g. ["우측 볼", "턱선"]
+        distribution_pattern: 'Clustered' | 'Scattered';
+    };
+
+    // 3. Asymmetry Index
+    asymmetry: {
+        left_count: number;
+        right_count: number;
+        diff_ratio: number; // e.g. 2.5 (Right is 2.5x more than Left)
+        comment?: string;
+    };
+
+    // 4. Post-Acne Marking
+    post_acne: {
+        pigmentation_count: number; // 색소침착
+        pitted_scars: boolean;      // 패인 흉터 유무
+    };
+
+    // 5. Integrated Scores
+    scores: {
+        inflammatory_score: number; // 가중치 점수
+        spatial_risk_score: number; // 밀집 위험도
+        total_health_index: number; // 0-100 (100 is best)
+        status: 'Good' | 'Warning' | 'Danger';
+    };
+
+    // Images
+    image_urls: {
+        front?: string;
+        left?: string;
+        right?: string;
+    };
+
+    analysis_date: string; // ISO date
 }
 
 /**
