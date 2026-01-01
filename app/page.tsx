@@ -4,6 +4,7 @@ import MealCard from '@/components/MealCard';
 import StatsCard from '@/components/StatsCard';
 import TimeInBed from '@/components/TimeInBed';
 import SkinDashboard from '@/components/SkinDashboard';
+import SkinTrendChart from '@/components/SkinTrendChart';
 import { SkinAnalysisMetadata } from '@/types';
 import { toZonedTime } from 'date-fns-tz';
 import { isSameDay, subDays } from 'date-fns';
@@ -98,7 +99,10 @@ export default async function HomePage() {
 
                 {/* Skin Analysis Dashboard (New) */}
                 {skinAnalysisEvents.length > 0 && (
-                    <SkinDashboard latestAnalysis={skinAnalysisEvents[0].metadata as SkinAnalysisMetadata} />
+                    <>
+                        <SkinDashboard latestAnalysis={skinAnalysisEvents[0].metadata as SkinAnalysisMetadata} />
+                        <SkinTrendChart skinEvents={skinAnalysisEvents} />
+                    </>
                 )}
 
                 {/* Meal Detail Card */}
