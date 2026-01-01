@@ -63,50 +63,7 @@ export default async function SkinPage() {
                         )}
 
                         {/* Historical Records */}
-                        <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-6">
-                            <h2 className="text-lg font-bold mb-4">📋 분석 기록</h2>
-                            <div className="space-y-3">
-                                {skinAnalysisEvents.slice(1, 6).map((event, idx) => {
-                                    const metadata = event.metadata as SkinAnalysisMetadata;
-                                    return (
-                                        <div
-                                            key={event.id}
-                                            className="flex items-center justify-between p-4 bg-[var(--background)] rounded-xl border border-[var(--card-border)] hover:border-purple-500/50 transition-colors"
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                <div className="text-2xl">
-                                                    {metadata.scores.status === 'Good' ? '✅' :
-                                                        metadata.scores.status === 'Warning' ? '⚠️' : '🚨'}
-                                                </div>
-                                                <div>
-                                                    <div className="font-medium">
-                                                        {new Date(event.timestamp).toLocaleDateString('ko-KR', {
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                            weekday: 'short'
-                                                        })}
-                                                    </div>
-                                                    <div className="text-sm text-[var(--text-secondary)]">
-                                                        {new Date(event.timestamp).toLocaleTimeString('ko-KR', {
-                                                            hour: '2-digit',
-                                                            minute: '2-digit'
-                                                        })}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="text-right">
-                                                <div className="text-2xl font-bold gradient-text">
-                                                    {metadata.scores.total_health_index}
-                                                </div>
-                                                <div className="text-xs text-[var(--text-secondary)]">
-                                                    염증 {metadata.lesion_counts.inflammatory}개
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
+                        <SkinHistoryList events={skinAnalysisEvents.slice(1)} />
                     </>
                 )}
             </div>
