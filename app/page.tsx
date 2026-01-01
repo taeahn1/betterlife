@@ -85,15 +85,6 @@ export default async function HomePage() {
                         count={heartRateCount}
                         comingSoon={heartRateCount === 0}
                     />
-                    <StatsCard
-                        title="Time in Bed"
-                        description="수면 시간"
-                        iconName="moon"
-                        iconColor="text-indigo-500"
-                        iconBgColor="bg-indigo-500/10"
-                        count={0}
-                        comingSoon={true}
-                    />
                 </div>
 
                 {/* Time in Bed Card (New) */}

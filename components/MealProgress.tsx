@@ -195,27 +195,6 @@ export default function MealProgress({ todayMeals }: MealProgressProps) {
                     </div>
                 ))}
             </div>
-
-            <div className="mt-6 pt-4 border-t border-[var(--card-border)] flex justify-between text-xs text-[var(--text-secondary)]">
-                <div className="text-center flex-1 border-r border-[var(--card-border)]">
-                    <div className="mb-1">탄</div>
-                    <div className="font-semibold text-blue-500 text-sm">
-                        {total.calories > 0 ? Math.round((total.carbs * 4 / total.calories) * 100) : 0}%
-                    </div>
-                </div>
-                <div className="text-center flex-1 border-r border-[var(--card-border)]">
-                    <div className="mb-1">단</div>
-                    <div className="font-semibold text-green-500 text-sm">
-                        {total.calories > 0 ? Math.round((total.protein * 4 / total.calories) * 100) : 0}%
-                    </div>
-                </div>
-                <div className="text-center flex-1">
-                    <div className="mb-1">지</div>
-                    <div className="font-semibold text-yellow-500 text-sm">
-                        {total.calories > 0 ? Math.round((total.fat * 9 / total.calories) * 100) : 0}%
-                    </div>
-                </div>
-            </div>
         </div>
     );
 }
