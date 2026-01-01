@@ -3,6 +3,8 @@ import MeditationCard from '@/components/MeditationCard';
 import MealCard from '@/components/MealCard';
 import StatsCard from '@/components/StatsCard';
 import TimeInBed from '@/components/TimeInBed';
+import SkinDashboard from '@/components/SkinDashboard';
+import { SkinAnalysisMetadata } from '@/types';
 import { toZonedTime } from 'date-fns-tz';
 import { isSameDay, subDays } from 'date-fns';
 
@@ -24,6 +26,10 @@ export default async function HomePage() {
     const yesterdayEvents = events.filter(e =>
         isSameDay(toZonedTime(new Date(e.timestamp), 'Asia/Seoul'), kstYesterday)
     );
+
+    const skinAnalysisEvents = events
+        .filter(e => e.activity_type === 'SKIN_CHECK')
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     // Calculate stats
     const meditationCount = events.filter(
@@ -89,6 +95,11 @@ export default async function HomePage() {
 
                 {/* Time in Bed Card (New) */}
                 <TimeInBed todayEvents={todayEvents} yesterdayEvents={yesterdayEvents} />
+
+                {/* Skin Analysis Dashboard (New) */}
+                {skinAnalysisEvents.length > 0 && (
+                    <SkinDashboard latestAnalysis={skinAnalysisEvents[0].metadata as SkinAnalysisMetadata} />
+                )}
 
                 {/* Meal Detail Card */}
                 <div className="mb-8">
