@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { analyzeSkinImages } from '@/lib/gemini-skin';
-import { createEvent, updateEvent } from '@/lib/db';
+import { addEvent } from '@/lib/db';
 import { ActivityType } from '@/types';
 
 export async function POST(req: NextRequest) {
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
         };
 
         // 4. Save Event to DB
-        const event = await createEvent({
+        const event = await addEvent({
             user_id,
             activity_type: ActivityType.SKIN_CHECK,
             timestamp: timestamp || new Date().toISOString(),
