@@ -2,12 +2,28 @@ import { queryEvents } from '@/lib/db';
 import MeditationCard from '@/components/MeditationCard';
 import MealCard from '@/components/MealCard';
 import StatsCard from '@/components/StatsCard';
+import TimeInBed from '@/components/TimeInBed';
+import { toZonedTime } from 'date-fns-tz';
+import { isSameDay, subDays } from 'date-fns';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-    // Fetch all events (in a real app, you'd filter by logged-in user)
+    // Fetch all events
     const events = await queryEvents({});
+
+    // Filter events for Today and Yesterday (KST)
+    const now = new Date();
+    const kstNow = toZonedTime(now, 'Asia/Seoul');
+    const kstYesterday = subDays(kstNow, 1);
+
+    const todayEvents = events.filter(e =>
+        isSameDay(toZonedTime(new Date(e.timestamp), 'Asia/Seoul'), kstNow)
+    );
+
+    const yesterdayEvents = events.filter(e =>
+        isSameDay(toZonedTime(new Date(e.timestamp), 'Asia/Seoul'), kstYesterday)
+    );
 
     // Calculate stats
     const meditationCount = events.filter(
@@ -70,24 +86,27 @@ export default async function HomePage() {
                         comingSoon={heartRateCount === 0}
                     />
                     <StatsCard
-                        title="수면"
-                        description="휴식 패턴"
+                        title="Time in Bed"
+                        description="수면 시간"
                         iconName="moon"
-                        iconColor="text-blue-500"
-                        iconBgColor="bg-blue-500/10"
+                        iconColor="text-indigo-500"
+                        iconBgColor="bg-indigo-500/10"
                         count={0}
                         comingSoon={true}
                     />
                 </div>
 
-                {/* Meditation Detail Card */}
-                <div className="mb-8">
-                    <MeditationCard events={events} />
-                </div>
+                {/* Time in Bed Card (New) */}
+                <TimeInBed todayEvents={todayEvents} yesterdayEvents={yesterdayEvents} />
 
                 {/* Meal Detail Card */}
                 <div className="mb-8">
                     <MealCard events={events} />
+                </div>
+
+                {/* Meditation Detail Card */}
+                <div className="mb-8">
+                    <MeditationCard events={events} />
                 </div>
 
                 {/* Info Card */}
