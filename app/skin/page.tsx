@@ -1,6 +1,7 @@
 import { queryEvents } from '@/lib/db';
 import SkinDashboard from '@/components/SkinDashboard';
 import SkinTrendChart from '@/components/SkinTrendChart';
+import SkinHistoryList from '@/components/SkinHistoryList';
 import { SkinAnalysisMetadata } from '@/types';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
