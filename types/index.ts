@@ -64,7 +64,8 @@ export interface FoodItem {
     carbohydrates: number;      // g
     protein: number;            // g
     fat: number;                // g
-    portion_size: string;       // e.g., "100g", "1접시"
+    portion_size: string;       // e.g., "100g", "0.3개"
+    quantity_description?: string; // e.g., "바나나 조각 2개", "샐러드 한 줌"
 }
 
 /**
