@@ -1,6 +1,4 @@
-'use client';
-
-import { EventLog } from '@/types';
+import { EventLog, ActivityType } from '@/types';
 import { Moon, Sun, BedDouble } from 'lucide-react';
 import { format, subDays, isSameDay } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
@@ -14,7 +12,7 @@ export default function TimeInBed({ todayEvents, yesterdayEvents }: TimeInBedPro
     // 1. Find Morning Meditation (Today 04:00 ~ 11:00)
     // Wake up time = Morning Meditation Start Time
     const morningMeditation = todayEvents.find(e => {
-        if (e.activity_type !== 'MEDITATION') return false;
+        if (e.activity_type !== ActivityType.MEDITATION_START) return false;
         const time = toZonedTime(new Date(e.timestamp), 'Asia/Seoul');
         const hour = time.getHours();
         return hour >= 4 && hour < 11;
@@ -23,7 +21,7 @@ export default function TimeInBed({ todayEvents, yesterdayEvents }: TimeInBedPro
     // 2. Find Night Meditation (Yesterday 22:00 ~ Today 02:00)
     // Bed time = Night Meditation Start Time + 15 mins
     const nightMeditation = [...yesterdayEvents, ...todayEvents].find(e => {
-        if (e.activity_type !== 'MEDITATION') return false;
+        if (e.activity_type !== ActivityType.MEDITATION_START) return false;
         const time = toZonedTime(new Date(e.timestamp), 'Asia/Seoul');
         const hour = time.getHours();
 
