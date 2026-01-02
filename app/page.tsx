@@ -5,10 +5,12 @@ import MealProgress from '@/components/MealProgress';
 import StatsCard from '@/components/StatsCard';
 import TimeInBed from '@/components/TimeInBed';
 import SkinSummaryCard from '@/components/SkinSummaryCard';
+import WorkoutSummaryCard from '@/components/WorkoutSummaryCard';
 import { SkinAnalysisMetadata } from '@/types';
 import { toZonedTime } from 'date-fns-tz';
 import { isSameDay, subDays } from 'date-fns';
 import { filterTodayMeals } from '@/utils/mealFilters';
+import { filterTodayWorkouts } from '@/utils/workoutFilters';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,6 +36,7 @@ export default async function HomePage() {
         .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     const todayMeals = filterTodayMeals(events);
+    const todayWorkouts = filterTodayWorkouts(events);
 
     // Calculate stats
     const meditationCount = events.filter(
@@ -116,6 +119,9 @@ export default async function HomePage() {
                 {todayMeals.length === 0 && (
                     <MealSummaryCard todayMeals={[]} />
                 )}
+
+                {/* Workout Summary */}
+                <WorkoutSummaryCard todayWorkouts={todayWorkouts} />
 
                 {/* Meditation Detail Card */}
                 <div className="mb-8">
