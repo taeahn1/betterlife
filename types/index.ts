@@ -8,6 +8,7 @@ export enum ActivityType {
     MEAL = 'MEAL',
     HEART_RATE = 'HEART_RATE',
     EXERCISE = 'EXERCISE',
+    WORKOUT = 'WORKOUT',
     SLEEP = 'SLEEP',
     MOOD = 'MOOD',
     SKIN_CHECK = 'SKIN_CHECK',
@@ -156,4 +157,78 @@ export interface MealMetadata {
     consumed_carbs: number;     // Actual consumed carbs
     consumed_protein: number;   // Actual consumed protein
     consumed_fat: number;       // Actual consumed fat
+}
+
+/**
+ * Workout metadata from Apple Watch
+ * Includes basic metrics and raw data arrays for detailed analysis
+ */
+export interface WorkoutMetadata {
+    // Basic Information
+    workout_type: 'running' | 'walking' | 'cycling' | 'swimming' | 'hiking' | 'other';
+    start_time: string;         // ISO timestamp
+    end_time: string;           // ISO timestamp
+    duration_seconds: number;   // Total duration
+
+    // Distance & Calories
+    distance_meters: number;    // Total distance
+    active_calories: number;    // Active energy burned
+    total_calories: number;     // Total energy burned
+
+    // Heart Rate Summary
+    avg_heart_rate: number;     // Average bpm
+    max_heart_rate: number;     // Maximum bpm
+    min_heart_rate: number;     // Minimum bpm
+
+    // Pace & Speed (optional)
+    avg_pace_min_per_km?: number;   // Average pace
+    avg_speed_kmh?: number;          // Average speed
+    max_speed_kmh?: number;          // Maximum speed
+
+    // Cadence (optional)
+    avg_cadence?: number;       // Average steps per minute
+
+    // Elevation (optional)
+    elevation_gain?: number;    // Meters climbed
+    elevation_descent?: number; // Meters descended
+
+    // Raw Data Arrays
+    heart_rate_samples: HeartRateSample[];  // Time-series heart rate
+    pace_samples?: PaceSample[];            // Time-series pace
+    cadence_samples?: CadenceSample[];      // Time-series cadence
+    route_points?: RoutePoint[];            // GPS coordinates
+}
+
+/**
+ * Individual heart rate measurement
+ */
+export interface HeartRateSample {
+    timestamp: string;  // ISO timestamp
+    bpm: number;        // Beats per minute
+}
+
+/**
+ * Individual pace measurement
+ */
+export interface PaceSample {
+    timestamp: string;      // ISO timestamp
+    pace_min_per_km: number; // Minutes per kilometer
+}
+
+/**
+ * Individual cadence measurement
+ */
+export interface CadenceSample {
+    timestamp: string;  // ISO timestamp
+    spm: number;        // Steps per minute
+}
+
+/**
+ * GPS route point
+ */
+export interface RoutePoint {
+    timestamp: string;  // ISO timestamp
+    latitude: number;
+    longitude: number;
+    altitude?: number;  // Meters
 }
