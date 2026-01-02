@@ -163,7 +163,10 @@ export default function MealCard({ events }: MealCardProps) {
                                                                 {event.metadata.menu_name || '알 수 없는 식사'}
                                                             </h3>
                                                             <button
-                                                                onClick={(e) => handleDelete(event.id, e)}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleDelete(event.id);
+                                                                }}
                                                                 className="text-gray-400 hover:text-red-500 transition-colors p-1"
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
