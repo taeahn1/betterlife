@@ -19,7 +19,7 @@ This guide explains how to automatically upload Apple Watch workout data to the 
 #### **Action 1: Get Recent Workout**
 ```
 Search: "Find Health Samples"
-- Type: Workouts
+- Type: Workout
 - Sort by: Start Date (Newest First)
 - Limit: 1
 ```
