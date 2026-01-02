@@ -4,11 +4,11 @@ import { EventLog, MealMetadata } from '@/types';
 
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { portion_consumed } = await request.json();
-        const eventId = params.id;
+        const { id: eventId } = await params;
 
         if (typeof portion_consumed !== 'number' || portion_consumed < 0.2 || portion_consumed > 1.0) {
             return NextResponse.json(
