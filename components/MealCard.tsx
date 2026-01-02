@@ -44,14 +44,14 @@ export default function MealCard({ events }: MealCardProps) {
         return acc;
     }, {} as Record<TimeGroup, typeof mealEvents>);
 
-    // Calculate totals for MealProgress
-    const todayMeals = mealEvents.map(e => e.metadata);
-
     const toggleGroup = (group: TimeGroup) => {
         setExpandedGroups(prev => {
             const newSet = new Set(prev);
-            if (newSet.has(group)) newSet.delete(group);
-            else newSet.add(group);
+            if (newSet.has(group)) {
+                newSet.delete(group);
+            } else {
+                newSet.add(group);
+            }
             return newSet;
         });
     };
@@ -59,22 +59,28 @@ export default function MealCard({ events }: MealCardProps) {
     const toggleExpand = (eventId: string) => {
         setExpandedRows(prev => {
             const newSet = new Set(prev);
-            if (newSet.has(eventId)) newSet.delete(eventId);
-            else newSet.add(eventId);
+            if (newSet.has(eventId)) {
+                newSet.delete(eventId);
+            } else {
+                newSet.add(eventId);
+            }
             return newSet;
         });
     };
 
-    const handleDelete = async (eventId: string, e: React.MouseEvent) => {
-        e.stopPropagation();
+    const handleDelete = async (eventId: string) => {
         if (!confirm('이 식사 기록을 삭제하시겠습니까?')) return;
 
         setDeletingIds(prev => new Set(prev).add(eventId));
 
         try {
-            const response = await fetch(`/api/events/${eventId}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Failed to delete event');
-            window.location.reload();
+            const response = await fetch(`/api/events/${eventId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) throw new Error('Failed to delete');
+
+            // Success - the UI will update automatically due to state change
         } catch (error) {
             console.error('Error deleting event:', error);
             alert('삭제 중 오류가 발생했습니다.');
@@ -91,7 +97,7 @@ export default function MealCard({ events }: MealCardProps) {
     return (
         <div className="space-y-6">
             {/* Daily Dashboard */}
-            <MealProgress todayMeals={todayMeals} />
+            <MealProgress todayMeals={mealEvents} />
 
             {/* Grouped Meal List */}
             <div className="space-y-4">
