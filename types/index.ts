@@ -149,4 +149,11 @@ export interface MealMetadata {
 
     // Image
     image_url?: string;         // Optional: stored image URL
+
+    // Portion consumed (for tracking actual intake)
+    portion_consumed: number;   // 0.2 to 1.0 (20% to 100%), default 1.0
+    consumed_calories: number;  // Actual consumed calories
+    consumed_carbs: number;     // Actual consumed carbs
+    consumed_protein: number;   // Actual consumed protein
+    consumed_fat: number;       // Actual consumed fat
 }

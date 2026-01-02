@@ -73,10 +73,15 @@ export async function POST(request: NextRequest) {
         const mealData: MealMetadata = await analyzeFoodImage(buffer, mime_type);
         console.log('Analysis complete:', mealData);
 
-        // Add image data to metadata for display
-        const metadataWithImage = {
+        // Add image data and initialize consumed values (100% by default)
+        const metadataWithImage: MealMetadata = {
             ...mealData,
             image_url: `data:${mime_type};base64,${image_base64}`,
+            portion_consumed: 1.0,
+            consumed_calories: mealData.calories,
+            consumed_carbs: mealData.carbohydrates,
+            consumed_protein: mealData.protein,
+            consumed_fat: mealData.fat,
         };
 
         // Store event in database

@@ -7,6 +7,7 @@ import { ko } from 'date-fns/locale/ko';
 import { toZonedTime } from 'date-fns-tz';
 import { useState } from 'react';
 import MealProgress from './MealProgress';
+import PortionSelector from './PortionSelector';
 
 interface MealCardProps {
     events: EventLog[];

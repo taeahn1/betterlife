@@ -62,10 +62,10 @@ export default function MealProgress({ todayMeals }: MealProgressProps) {
     const total = todayMeals.reduce((acc, event) => {
         const meal = event.metadata as MealMetadata;
         return {
-            calories: acc.calories + (meal?.calories || 0),
-            carbs: acc.carbs + (meal?.carbohydrates || 0),
-            protein: acc.protein + (meal?.protein || 0),
-            fat: acc.fat + (meal?.fat || 0)
+            calories: acc.calories + (meal?.consumed_calories || meal?.calories || 0),
+            carbs: acc.carbs + (meal?.consumed_carbs || meal?.carbohydrates || 0),
+            protein: acc.protein + (meal?.consumed_protein || meal?.protein || 0),
+            fat: acc.fat + (meal?.consumed_fat || meal?.fat || 0)
         };
     }, { calories: 0, carbs: 0, protein: 0, fat: 0 });
 
