@@ -1,12 +1,12 @@
 'use client';
 
-import { MealMetadata } from '@/types';
+import { EventLog, MealMetadata } from '@/types';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Edit2, Check, X, RotateCcw } from 'lucide-react';
 
 interface MealProgressProps {
-    todayMeals: MealMetadata[];
+    todayMeals: EventLog[];
 }
 
 export default function MealProgress({ todayMeals }: MealProgressProps) {
@@ -59,12 +59,15 @@ export default function MealProgress({ todayMeals }: MealProgressProps) {
         }
     };
 
-    const total = todayMeals.reduce((acc, meal) => ({
-        calories: acc.calories + (meal.calories || 0),
-        carbs: acc.carbs + (meal.carbohydrates || 0),
-        protein: acc.protein + (meal.protein || 0),
-        fat: acc.fat + (meal.fat || 0)
-    }), { calories: 0, carbs: 0, protein: 0, fat: 0 });
+    const total = todayMeals.reduce((acc, event) => {
+        const meal = event.metadata as MealMetadata;
+        return {
+            calories: acc.calories + (meal?.calories || 0),
+            carbs: acc.carbs + (meal?.carbohydrates || 0),
+            protein: acc.protein + (meal?.protein || 0),
+            fat: acc.fat + (meal?.fat || 0)
+        };
+    }, { calories: 0, carbs: 0, protein: 0, fat: 0 });
 
     const getPercent = (current: number, goal: number) => {
         if (goal <= 0) return 0;
