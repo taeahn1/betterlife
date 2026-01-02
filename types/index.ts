@@ -106,6 +106,7 @@ export interface EventQueryParams {
     activity_type?: ActivityType;
     start_date?: string;
     end_date?: string;
+    limit?: number;  // Max number of results (default 1000)
 }
 
 /**

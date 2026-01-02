@@ -65,6 +65,10 @@ export async function queryEvents(params: EventQueryParams): Promise<EventLog[]>
     // Sort by timestamp (newest first)
     query = query.order('timestamp', { ascending: false });
 
+    // Add limit to prevent timeout (default 1000)
+    const limit = params.limit || 1000;
+    query = query.limit(limit);
+
     const { data, error } = await query;
 
     if (error) {
