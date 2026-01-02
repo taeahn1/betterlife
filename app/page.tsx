@@ -1,12 +1,14 @@
 import { queryEvents } from '@/lib/db';
 import MeditationCard from '@/components/MeditationCard';
-import MealCard from '@/components/MealCard';
+import MealSummaryCard from '@/components/MealSummaryCard';
+import MealProgress from '@/components/MealProgress';
 import StatsCard from '@/components/StatsCard';
 import TimeInBed from '@/components/TimeInBed';
 import SkinSummaryCard from '@/components/SkinSummaryCard';
 import { SkinAnalysisMetadata } from '@/types';
 import { toZonedTime } from 'date-fns-tz';
 import { isSameDay, subDays } from 'date-fns';
+import { filterTodayMeals } from '@/utils/mealFilters';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,6 +32,8 @@ export default async function HomePage() {
     const skinAnalysisEvents = events
         .filter(e => e.activity_type === 'SKIN_CHECK')
         .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    const todayMeals = filterTodayMeals(events);
 
     // Calculate stats
     const meditationCount = events.filter(
@@ -101,10 +105,17 @@ export default async function HomePage() {
                     latestAnalysis={skinAnalysisEvents.length > 0 ? skinAnalysisEvents[0].metadata as SkinAnalysisMetadata : null}
                 />
 
-                {/* Meal Detail Card */}
-                <div className="mb-8">
-                    <MealCard events={events} />
-                </div>
+                {/* Meal Summary - Today Only */}
+                {todayMeals.length > 0 && (
+                    <>
+                        <MealProgress todayMeals={todayMeals} />
+                        <MealSummaryCard todayMeals={todayMeals} />
+                    </>
+                )}
+
+                {todayMeals.length === 0 && (
+                    <MealSummaryCard todayMeals={[]} />
+                )}
 
                 {/* Meditation Detail Card */}
                 <div className="mb-8">
