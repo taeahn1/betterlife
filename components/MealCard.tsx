@@ -213,6 +213,14 @@ export default function MealCard({ events }: MealCardProps) {
                                                     </button>
                                                 )}
 
+                                                {/* Portion Selector */}
+                                                <PortionSelector
+                                                    eventId={event.id}
+                                                    currentPortion={event.metadata.portion_consumed || 1.0}
+                                                    metadata={event.metadata}
+                                                    onUpdate={() => window.location.reload()}
+                                                />
+
                                                 {/* Expanded Details */}
                                                 {isExpanded && hasDetails && (
                                                     <div className="mt-3 space-y-2 p-3 bg-[var(--background)] rounded-xl">
